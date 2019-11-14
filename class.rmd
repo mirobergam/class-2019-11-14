@@ -1,0 +1,47 @@
+---
+title: "National Election Survey"
+author: "Miroslav Bergam"
+date: "11/14/2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(googlesheets4)
+sheets_deauth()
+data <- read_sheet("1QA_Xv9tAbKhwFdQpnVa2hTjhEdg5zAl4WY5EVanWSo0")
+
+```
+
+
+### Graphical Relationship between dvote and dem_adv
+
+```{r}
+
+
+#Dem_Adv and Dvote
+
+ggplot(data, aes(dem_adv, dvote)) +
+  geom_jitter(alpha = 0.5, width = 0.2) +
+  geom_smooth(method = "lm")
+```
+
+### Logistical model of dvote and dem_adv
+
+### Graphical relationship between dvote and female
+
+```{r}
+
+glm_obj <- glm(data = data, dvote ~ female, family = 'binomial')
+
+ggplot(data, aes(female, dvote)) +
+  geom_jitter(alpha = 0.5, width = 0.2) +
+  geom_smooth(method = "glm", method.args = list(family = "binomal", se = FALSE))
+
+summary(glm_obj) %>% coef()
+```
+
+
+### Two logistical models: regular and Bayesian
